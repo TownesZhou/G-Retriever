@@ -64,3 +64,11 @@ output/
 wandb/
 
 .vscode/
+
+# Ignore preprocessed data
+dataset/expla_graphs/
+dataset/webqsp/
+dataset/scene_graphs/
+dataset/gqa
+
+.hypothesis
