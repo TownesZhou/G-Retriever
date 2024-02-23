@@ -40,6 +40,8 @@ def main(args):
     test_loader = DataLoader(test_dataset, batch_size=args.eval_batch_size, drop_last=False, pin_memory=True, shuffle=False, collate_fn=collate_fn)
 
     # Step 3: Build Model
+    device_max_mem = args.device_max_mem.split(',')
+    args.max_memory = {i: device_max_mem[i] for i in range(len(device_max_mem))}
     args.llm_model_path = llama_model_path[args.llm_model_name]
     model = load_model[args.model_name](graph_type=dataset.graph_type, args=args, init_prompt=dataset.prompt)
 

@@ -7,6 +7,7 @@ def parse_args_llama():
     parser.add_argument("--model_name", type=str, default='graph_llm')
     parser.add_argument("--project", type=str, default="project_g_retriever")
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--device_max_mem", type=str, default='80GiB')  # For multiple devices, separate by comma 
 
     parser.add_argument("--dataset", type=str, default='gqa_baseline')
     parser.add_argument("--lr", type=float, default=1e-5)

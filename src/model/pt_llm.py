@@ -31,7 +31,8 @@ class PromptTuningLLM(torch.nn.Module):
 
         print('Loading LLAMA')
         kwargs = {
-            "max_memory": {0: '20GiB', 1: '20GiB', 2: '20GiB', 3: '20GiB'},
+            # "max_memory": {0: '20GiB', 1: '20GiB', 2: '20GiB', 3: '20GiB'},
+            "max_memory": args.max_memory,
             "device_map": "auto",
             "revision": "main",
         }
@@ -92,19 +93,15 @@ class PromptTuningLLM(torch.nn.Module):
 
     def maybe_autocast(self, dtype=torch.bfloat16):
         # if on cpu, don't use autocast
-        # if on gpu, use autocast with dtype if provided, otherwise use torch.float16
-        # If dtype is bfloat16, use autocast only if bfloat16 is supported
         if self.device == torch.device("cpu"):
-            enable_autocast = False
-        elif dtype == torch.bfloat16:
-            enable_autocast = torch.cuda.is_bf16_supported()
-        else:
-            enable_autocast = True
-
-        if enable_autocast:
-            return torch.cuda.amp.autocast(dtype=dtype)
-        else:
             return contextlib.nullcontext()
+        
+        # if dtype is bfloat16 and it's not supported, default to float16
+        if dtype == torch.bfloat16 and not torch.cuda.is_bf16_supported():
+            dtype = torch.float16
+        
+        # Use autocast with the decided dtype (either the original or the fallback to float16)
+        return autocast(dtype=dtype)
 
     def forward(self, samples):
 
