@@ -73,6 +73,7 @@ class GraphLLM(torch.nn.Module):
             model = get_peft_model(model, config)
 
         self.model = model
+        self.word_embedding = self.model.model.get_input_embeddings()
         print('Finish loading LLAMA!')
 
         self.graph_encoder = load_gnn_model[args.gnn_model_name](
@@ -87,10 +88,9 @@ class GraphLLM(torch.nn.Module):
         self.projector = nn.Sequential(
             nn.Linear(args.gnn_hidden_dim, 2048),
             nn.Sigmoid(),
-            nn.Linear(2048, 4096),
+            nn.Linear(2048, self.word_embedding.embedding_dim),  # Fix: align with word embedding size
         ).to(self.model.device)
 
-        self.word_embedding = self.model.model.get_input_embeddings()
 
     @property
     def device(self):
