@@ -72,3 +72,7 @@ dataset/scene_graphs/
 dataset/gqa
 
 .hypothesis
+
+# Ignore slurm files
+slurm/
+slurm_logs/
