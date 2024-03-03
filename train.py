@@ -31,9 +31,12 @@ def main(args):
     idx_split = dataset.get_idx_split()
 
     # Step 2: Build Node Classification Dataset
-    train_dataset = [dataset[i] for i in idx_split['train']]
-    val_dataset = [dataset[i] for i in idx_split['val']]
-    test_dataset = [dataset[i] for i in idx_split['test']]
+    train_dataset = [dataset[i] for i in tqdm(idx_split['train'], desc="Loading training data") 
+                     if dataset[i] is not None]
+    val_dataset = [dataset[i] for i in tqdm(idx_split['val'], desc="Loading validation data") 
+                   if dataset[i] is not None]
+    test_dataset = [dataset[i] for i in tqdm(idx_split['test'], desc="Loading test data") 
+                    if dataset[i] is not None]
 
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, drop_last=True, pin_memory=True, shuffle=True, collate_fn=collate_fn)
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size, drop_last=False, pin_memory=True, shuffle=False, collate_fn=collate_fn)

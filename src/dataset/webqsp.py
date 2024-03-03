@@ -37,6 +37,10 @@ class WebQSPDataset(Dataset):
         desc = open(f'{cached_desc}/{index}.txt', 'r').read()
         label = ('|').join(data['answer']).lower()
 
+        # Check that the graph is not empty. If it is, return None
+        if graph.num_nodes == 0:
+            return None
+
         return {
             'id': index,
             'question': question,
